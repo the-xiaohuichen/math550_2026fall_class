@@ -1,0 +1,9 @@
+family,matched_parameters,known_differences
+Logistic none,"standardize; no penalty; max_iter=10,000; tol=1e-8",Accelerated proximal gradient versus L-BFGS; separable data have no finite MLE.
+Logistic L1,"standardize; C=1; scratch lambda=1/n; max_iter=10,000; tol=1e-8",FISTA soft thresholding versus liblinear coordinate descent and solver tolerances.
+Logistic L2,"standardize; C=1; scratch lambda=1/n; max_iter=10,000; tol=1e-8",Accelerated gradient versus L-BFGS; objectives are matched after mean-loss scaling.
+Random forest,trees=100; depth=5; min_leaf=2; max_features=sqrt; bootstrap,Independent random-number streams and tie-breaking create different individual trees.
+AdaBoost,stumps=120; learning_rate=0.5; depth=1,The libraries use different score-to-probability conventions despite matching margins.
+Gradient boosting,trees=150; learning_rate=0.05; depth=2; min_leaf=5,The classroom model fits raw pseudo-residual means; sklearn applies optimized leaf updates.
+XGBoost style,trees=120; eta=0.05; depth=2; min_child_weight=1; lambda=1; row/column=0.9,Scratch uses exact thresholds; XGBoost uses its production histogram engine and safeguards.
+LightGBM style,trees=120; eta=0.05; leaves=7; depth=4; bins=32; min_leaf=10; lambda=1,"Histogram construction, missing-value rules, tie-breaking, and production safeguards differ."

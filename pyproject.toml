@@ -1,0 +1,67 @@
+[build-system]
+requires = ["setuptools>=75"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "math550-teaching-lab"
+version = "0.5.0"
+description = "Topic-oriented transparent machine-learning implementations for MATH 550"
+requires-python = ">=3.11"
+dependencies = [
+    "matplotlib>=3.11.1",
+    "numpy>=2.0,<3",
+    "pandas>=2.3.3",
+    "scikit-learn>=1.9.0",
+    "scipy>=1.17.1",
+    "torch>=2.13.0",
+    "torchvision>=0.28.0",
+]
+
+[project.optional-dependencies]
+tabular = [
+    "pandas>=2.2,<3",
+    "scikit-learn>=1.8,<1.10",
+    "matplotlib>=3.9,<4",
+    "xgboost>=2.1,<4",
+    "lightgbm>=4.5,<5",
+]
+generative = [
+    "matplotlib>=3.9,<4",
+    "pandas>=2.2,<3",
+    "scikit-learn>=1.8,<1.10",
+    "scipy>=1.15,<2",
+    "torch>=2.8,<3",
+]
+gnn = [
+    "matplotlib>=3.9,<4",
+    "torch>=2.8,<3",
+]
+llm = [
+    "matplotlib>=3.9,<4",
+    "torch>=2.8,<3",
+]
+rl = [
+    "matplotlib>=3.9,<4",
+    "minatar==1.0.15",
+    "pillow>=12,<13",
+    "torch>=2.8,<3",
+]
+rl-data = [
+    "minari[gcs,hdf5]>=0.5.3,<0.6",
+]
+reasoning = [
+    "matplotlib>=3.9,<4",
+    "peft>=0.15,<1",
+    "torch>=2.8,<3",
+    "transformers>=4.51,<5",
+]
+evaluation = [
+    "matplotlib>=3.9,<4",
+    "pandas>=2.2,<3",
+    "peft>=0.15,<1",
+    "torch>=2.8,<3",
+    "transformers>=4.51,<5",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]

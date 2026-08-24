@@ -1,0 +1,54 @@
+\contentsline {section}{\numberline {1}Learning objectives and module map}{4}{section.1}%
+\contentsline {section}{\numberline {2}The empirical question and public benchmark}{4}{section.2}%
+\contentsline {subsection}{\numberline {2.1}Dataset and target}{4}{subsection.2.1}%
+\contentsline {subsection}{\numberline {2.2}A fixed, leakage-resistant protocol}{5}{subsection.2.2}%
+\contentsline {subsection}{\numberline {2.3}Why the comparison is paired}{5}{subsection.2.3}%
+\contentsline {section}{\numberline {3}Evaluation: one metric cannot verify a model}{5}{section.3}%
+\contentsline {subsection}{\numberline {3.1}Ranking, thresholds, and probabilities}{5}{subsection.3.1}%
+\contentsline {subsection}{\numberline {3.2}What a scratch-versus-library gap can mean}{6}{subsection.3.2}%
+\contentsline {section}{\numberline {4}Logistic regression from probability to code}{6}{section.4}%
+\contentsline {subsection}{\numberline {4.1}Linear score and sigmoid}{6}{subsection.4.1}%
+\contentsline {subsection}{\numberline {4.2}Bernoulli likelihood and cross-entropy}{7}{subsection.4.2}%
+\contentsline {subsection}{\numberline {4.3}Gradient and curvature}{7}{subsection.4.3}%
+\contentsline {subsection}{\numberline {4.4}Reusable estimator interface}{7}{subsection.4.4}%
+\contentsline {section}{\numberline {5}Regularization and explicit optimization}{8}{section.5}%
+\contentsline {subsection}{\numberline {5.1}L2 shrinkage}{8}{subsection.5.1}%
+\contentsline {subsection}{\numberline {5.2}L1 sparsity and the proximal update}{8}{subsection.5.2}%
+\contentsline {subsection}{\numberline {5.3}Acceleration, restart, and monotone acceptance}{8}{subsection.5.3}%
+\contentsline {subsection}{\numberline {5.4}Matching scikit-learn's penalty convention}{8}{subsection.5.4}%
+\contentsline {section}{\numberline {6}CART: the reusable tree primitive}{9}{section.6}%
+\contentsline {subsection}{\numberline {6.1}Weighted Gini splitting}{9}{subsection.6.1}%
+\contentsline {subsection}{\numberline {6.2}Why scaling is unnecessary for an ordinary tree}{10}{subsection.6.2}%
+\contentsline {subsection}{\numberline {6.3}Regression and Newton trees}{10}{subsection.6.3}%
+\contentsline {section}{\numberline {7}Random forests: independent diversity}{10}{section.7}%
+\contentsline {section}{\numberline {8}AdaBoost: sequential focus on difficult rows}{11}{section.8}%
+\contentsline {subsection}{\numberline {8.1}Exponential loss and the weighted training sample}{11}{subsection.8.1}%
+\contentsline {subsection}{\numberline {8.2}Deriving the weak-learner coefficient}{12}{subsection.8.2}%
+\contentsline {subsection}{\numberline {8.3}Deriving the observation-weight update}{12}{subsection.8.3}%
+\contentsline {section}{\numberline {9}Gradient boosting: descent in function space}{13}{section.9}%
+\contentsline {subsection}{\numberline {9.1}From ordinary gradient descent to a functional gradient}{13}{subsection.9.1}%
+\contentsline {subsection}{\numberline {9.2}Binary cross-entropy pseudo-residuals}{14}{subsection.9.2}%
+\contentsline {subsection}{\numberline {9.3}Deriving the initial constant score}{14}{subsection.9.3}%
+\contentsline {subsection}{\numberline {9.4}Why a regression-tree leaf stores a mean pseudo-residual}{15}{subsection.9.4}%
+\contentsline {subsection}{\numberline {9.5}Optional terminal-region optimization and the bridge to Newton boosting}{15}{subsection.9.5}%
+\contentsline {section}{\numberline {10}XGBoost-style second-order trees}{16}{section.10}%
+\contentsline {subsection}{\numberline {10.1}Step 1: write the regularized stagewise objective}{16}{subsection.10.1}%
+\contentsline {subsection}{\numberline {10.2}Step 2: take a second-order Taylor expansion}{17}{subsection.10.2}%
+\contentsline {subsection}{\numberline {10.3}Step 3: group observations by tree leaf}{17}{subsection.10.3}%
+\contentsline {subsection}{\numberline {10.4}Step 4: derive the optimal leaf value}{18}{subsection.10.4}%
+\contentsline {subsection}{\numberline {10.5}Step 5: derive the split-gain formula}{18}{subsection.10.5}%
+\contentsline {subsection}{\numberline {10.6}Interpretation and relation to Newton's method}{19}{subsection.10.6}%
+\contentsline {section}{\numberline {11}LightGBM-style histograms and leaf-wise growth}{19}{section.11}%
+\contentsline {section}{\numberline {12}Measured scratch-versus-library results}{20}{section.12}%
+\contentsline {subsection}{\numberline {12.1}Held-out ranking consistency}{20}{subsection.12.1}%
+\contentsline {subsection}{\numberline {12.2}Probability discrepancies are the main teaching result}{21}{subsection.12.2}%
+\contentsline {subsection}{\numberline {12.3}The unregularized separation warning}{22}{subsection.12.3}%
+\contentsline {subsection}{\numberline {12.4}Parameter verification}{22}{subsection.12.4}%
+\contentsline {section}{\numberline {13}How to interpret model choice responsibly}{22}{section.13}%
+\contentsline {section}{\numberline {14}Common failure modes and diagnostic questions}{23}{section.14}%
+\contentsline {section}{\numberline {15}Extensions}{23}{section.15}%
+\contentsline {section}{\numberline {A}Pseudocode}{24}{appendix.A}%
+\contentsline {subsection}{\numberline {A.1}Accelerated proximal logistic training}{24}{subsection.A.1}%
+\contentsline {subsection}{\numberline {A.2}Random forest}{24}{subsection.A.2}%
+\contentsline {subsection}{\numberline {A.3}Newton boosting}{24}{subsection.A.3}%
+\contentsline {section}{\numberline {B}Reproducibility commands}{24}{appendix.B}%

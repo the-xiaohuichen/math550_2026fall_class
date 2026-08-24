@@ -1,0 +1,48 @@
+Metadata-Version: 2.4
+Name: math550-teaching-lab
+Version: 0.5.0
+Summary: Topic-oriented transparent machine-learning implementations for MATH 550
+Requires-Python: >=3.11
+Requires-Dist: matplotlib>=3.11.1
+Requires-Dist: numpy<3,>=2.0
+Requires-Dist: pandas>=2.3.3
+Requires-Dist: scikit-learn>=1.9.0
+Requires-Dist: scipy>=1.17.1
+Requires-Dist: torch>=2.13.0
+Requires-Dist: torchvision>=0.28.0
+Provides-Extra: tabular
+Requires-Dist: pandas<3,>=2.2; extra == "tabular"
+Requires-Dist: scikit-learn<1.10,>=1.8; extra == "tabular"
+Requires-Dist: matplotlib<4,>=3.9; extra == "tabular"
+Requires-Dist: xgboost<4,>=2.1; extra == "tabular"
+Requires-Dist: lightgbm<5,>=4.5; extra == "tabular"
+Provides-Extra: generative
+Requires-Dist: matplotlib<4,>=3.9; extra == "generative"
+Requires-Dist: pandas<3,>=2.2; extra == "generative"
+Requires-Dist: scikit-learn<1.10,>=1.8; extra == "generative"
+Requires-Dist: scipy<2,>=1.15; extra == "generative"
+Requires-Dist: torch<3,>=2.8; extra == "generative"
+Provides-Extra: gnn
+Requires-Dist: matplotlib<4,>=3.9; extra == "gnn"
+Requires-Dist: torch<3,>=2.8; extra == "gnn"
+Provides-Extra: llm
+Requires-Dist: matplotlib<4,>=3.9; extra == "llm"
+Requires-Dist: torch<3,>=2.8; extra == "llm"
+Provides-Extra: rl
+Requires-Dist: matplotlib<4,>=3.9; extra == "rl"
+Requires-Dist: minatar==1.0.15; extra == "rl"
+Requires-Dist: pillow<13,>=12; extra == "rl"
+Requires-Dist: torch<3,>=2.8; extra == "rl"
+Provides-Extra: rl-data
+Requires-Dist: minari[gcs,hdf5]<0.6,>=0.5.3; extra == "rl-data"
+Provides-Extra: reasoning
+Requires-Dist: matplotlib<4,>=3.9; extra == "reasoning"
+Requires-Dist: peft<1,>=0.15; extra == "reasoning"
+Requires-Dist: torch<3,>=2.8; extra == "reasoning"
+Requires-Dist: transformers<5,>=4.51; extra == "reasoning"
+Provides-Extra: evaluation
+Requires-Dist: matplotlib<4,>=3.9; extra == "evaluation"
+Requires-Dist: pandas<3,>=2.2; extra == "evaluation"
+Requires-Dist: peft<1,>=0.15; extra == "evaluation"
+Requires-Dist: torch<3,>=2.8; extra == "evaluation"
+Requires-Dist: transformers<5,>=4.51; extra == "evaluation"

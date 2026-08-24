@@ -1,0 +1,19 @@
+{
+  "topic": "tabular",
+  "dataset": "Breast Cancer Wisconsin (Diagnostic)",
+  "dataset_source": "https://archive.ics.uci.edu/dataset/17/breast-cancer-wisconsin-diagnostic",
+  "dataset_doi": "10.24432/C5DW2B",
+  "dataset_license": "CC BY 4.0",
+  "task": "Binary classification from 30 continuous cell-nucleus measurements",
+  "positive_class": "malignant",
+  "n_rows": 569,
+  "n_features": 30,
+  "n_train": 455,
+  "n_test": 114,
+  "test_fraction": 0.2,
+  "split": "fixed class-stratified train/test split",
+  "preprocessing": "StandardScaler fitted on training data for logistic models only; tree models use original numeric features",
+  "random_state": 550,
+  "bootstrap_samples": 2000,
+  "quick": false
+}
