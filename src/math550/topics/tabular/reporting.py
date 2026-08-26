@@ -154,7 +154,7 @@ compact classroom code should replace mature production libraries.
 
 The benchmark is the public UCI Breast Cancer Wisconsin Diagnostic dataset:
 569 rows, {n_features} continuous predictors, and no missing cells. It is
-distributed under CC BY 4.0 and loaded from scikit-learn's local copy. The
+distributed under CC BY 4.0 and loaded from the downloaded UCI source file. The
 response is recoded so that $y=1$ denotes malignant disease.
 
 The fixed class-stratified 80/20 split contains {n_train} training and {n_test}

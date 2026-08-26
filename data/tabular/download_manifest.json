@@ -1,0 +1,77 @@
+{
+  "datasets": {
+    "wdbc": {
+      "archive": {
+        "bytes": 51284,
+        "name": "breast-cancer-wisconsin-diagnostic.zip",
+        "sha256": "bc154869ef13f753f9e2b5a17e248cfe1ba4b6721db7c4da9f4880e40b05d3af",
+        "url": "https://archive.ics.uci.edu/static/public/17/breast+cancer+wisconsin+diagnostic.zip"
+      },
+      "citation": "Wolberg, W., Mangasarian, O., Street, N., & Street, W. (1993). Breast Cancer Wisconsin (Diagnostic) [Dataset]. UCI Machine Learning Repository.",
+      "dataset": "Breast Cancer Wisconsin (Diagnostic)",
+      "doi": "10.24432/C5DW2B",
+      "files": {
+        "wdbc.data": {
+          "bytes": 124103,
+          "sha256": "d606af411f3e5be8a317a5a8b652b425aaf0ff38ca683d5327ffff94c3695f4a"
+        },
+        "wdbc.names": {
+          "bytes": 4708,
+          "sha256": "840e04e3f20f8a5b326892f3b9cbc01c4cd6f7e6c597630b701ef6c0ac79f5ef"
+        }
+      },
+      "license": "CC BY 4.0",
+      "local_directory": "data/tabular/wdbc",
+      "source_page": "https://archive.ics.uci.edu/dataset/17/breast-cancer-wisconsin-diagnostic",
+      "validation": {
+        "class_counts": {
+          "B": 357,
+          "M": 212
+        },
+        "fields_per_row": 32,
+        "rows": 569,
+        "target_column": 1
+      }
+    },
+    "wine": {
+      "archive": {
+        "bytes": 6038,
+        "name": "wine.zip",
+        "sha256": "2bae62c4481220623579d4c4fb36b55652b6b75e06e49fa1981b8198362dfdab",
+        "url": "https://archive.ics.uci.edu/static/public/109/wine.zip"
+      },
+      "citation": "Aeberhard, S. & Forina, M. (1992). Wine [Dataset]. UCI Machine Learning Repository.",
+      "dataset": "Wine",
+      "doi": "10.24432/C5PC7J",
+      "files": {
+        "Index": {
+          "bytes": 105,
+          "sha256": "c24d1f17df97bdde234913bb0a3334227215eefd0ad3d6a9988151d49971cba7"
+        },
+        "wine.data": {
+          "bytes": 10782,
+          "sha256": "6be6b1203f3d51df0b553a70e57b8a723cd405683958204f96d23d7cd6aea659"
+        },
+        "wine.names": {
+          "bytes": 3036,
+          "sha256": "f1b84f2ef845e0bdebf13e14fa7a213e56de4f1baa40c5974dbd1ee51c5ae710"
+        }
+      },
+      "license": "CC BY 4.0",
+      "local_directory": "data/tabular/wine",
+      "source_page": "https://archive.ics.uci.edu/dataset/109/wine",
+      "validation": {
+        "class_counts": {
+          "1": 59,
+          "2": 71,
+          "3": 48
+        },
+        "fields_per_row": 14,
+        "rows": 178,
+        "target_column": 0
+      }
+    }
+  },
+  "schema_version": 1,
+  "verified_on": "2026-08-24"
+}

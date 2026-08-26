@@ -39,54 +39,72 @@
 \@writefile{toc}{\contentsline {subsection}{\numberline {5.4}Matching scikit-learn's penalty convention}{8}{subsection.5.4}\protected@file@percent }
 \@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Accepted penalized-objective paths for the three scratch logistic models. The plot verifies optimization behavior, not held-out generalization.}}{9}{figure.1}\protected@file@percent }
 \@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Training-only regularization study. Validation log loss, coefficient norm, and L1 support answer different questions and are all inspected before the test set is used.}}{9}{figure.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {6}CART: the reusable tree primitive}{9}{section.6}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.1}Weighted Gini splitting}{9}{subsection.6.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.2}Why scaling is unnecessary for an ordinary tree}{10}{subsection.6.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {6.3}Regression and Newton trees}{10}{subsection.6.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {7}Random forests: independent diversity}{10}{section.7}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {8}AdaBoost: sequential focus on difficult rows}{11}{section.8}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {8.1}Exponential loss and the weighted training sample}{11}{subsection.8.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {8.2}Deriving the weak-learner coefficient}{12}{subsection.8.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {8.3}Deriving the observation-weight update}{12}{subsection.8.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {9}Gradient boosting: descent in function space}{13}{section.9}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {9.1}From ordinary gradient descent to a functional gradient}{13}{subsection.9.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {9.2}Binary cross-entropy pseudo-residuals}{14}{subsection.9.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {9.3}Deriving the initial constant score}{14}{subsection.9.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {9.4}Why a regression-tree leaf stores a mean pseudo-residual}{15}{subsection.9.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {9.5}Optional terminal-region optimization and the bridge to Newton boosting}{15}{subsection.9.5}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {10}XGBoost-style second-order trees}{16}{section.10}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {10.1}Step 1: write the regularized stagewise objective}{16}{subsection.10.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {10.2}Step 2: take a second-order Taylor expansion}{17}{subsection.10.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {10.3}Step 3: group observations by tree leaf}{17}{subsection.10.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {10.4}Step 4: derive the optimal leaf value}{18}{subsection.10.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {10.5}Step 5: derive the split-gain formula}{18}{subsection.10.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {6}Decision trees and CART: the reusable tree primitive}{9}{section.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.1}What a decision tree represents}{9}{subsection.6.1}\protected@file@percent }
+\citation{cart}
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Tree anatomy and one prediction path. The symbols and leaf probabilities are illustrative rather than estimates from the benchmark fit.}}{10}{figure.3}\protected@file@percent }
+\newlabel{fig:tree-anatomy}{{3}{10}{Tree anatomy and one prediction path. The symbols and leaf probabilities are illustrative rather than estimates from the benchmark fit}{figure.3}{}}
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.2}What CART means}{10}{subsection.6.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.3}Node impurity for classification}{11}{subsection.6.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.4}The CART split objective}{11}{subsection.6.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.5}A six-observation split calculation}{12}{subsection.6.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.6}Leaf predictions and probability caution}{12}{subsection.6.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.7}Stopping, pre-pruning, and cost-complexity pruning}{12}{subsection.6.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.8}Regression CART and the connection to boosting}{13}{subsection.6.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {6.9}What trees gain and what they sacrifice}{13}{subsection.6.9}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {7}Random forests: bagging plus randomized features}{13}{section.7}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.1}Why one tree is not enough}{13}{subsection.7.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.2}The random-forest algorithm}{14}{subsection.7.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.3}How averaging reduces variance}{14}{subsection.7.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.4}Out-of-bag evaluation}{15}{subsection.7.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.5}Hyperparameters and their effects}{15}{subsection.7.5}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Random-forest controls should be interpreted through tree strength, tree correlation, probability stability, and computational cost.}}{15}{table.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {7.6}Interpretation and common traps}{15}{subsection.7.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {8}AdaBoost: sequential focus on difficult rows}{16}{section.8}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.1}Exponential loss and the weighted training sample}{16}{subsection.8.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.2}Deriving the weak-learner coefficient}{17}{subsection.8.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {8.3}Deriving the observation-weight update}{17}{subsection.8.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {9}Gradient boosting: descent in function space}{18}{section.9}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {9.1}From ordinary gradient descent to a functional gradient}{18}{subsection.9.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {9.2}Binary cross-entropy pseudo-residuals}{19}{subsection.9.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {9.3}Deriving the initial constant score}{19}{subsection.9.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {9.4}Why a regression-tree leaf stores a mean pseudo-residual}{20}{subsection.9.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {9.5}Optional terminal-region optimization and the bridge to Newton boosting}{20}{subsection.9.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {10}XGBoost-style second-order trees}{21}{section.10}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {10.1}Step 1: write the regularized stagewise objective}{21}{subsection.10.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {10.2}Step 2: take a second-order Taylor expansion}{22}{subsection.10.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {10.3}Step 3: group observations by tree leaf}{22}{subsection.10.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {10.4}Step 4: derive the optimal leaf value}{23}{subsection.10.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {10.5}Step 5: derive the split-gain formula}{23}{subsection.10.5}\protected@file@percent }
 \citation{xgboost}
 \citation{lightgbm}
-\@writefile{toc}{\contentsline {subsection}{\numberline {10.6}Interpretation and relation to Newton's method}{19}{subsection.10.6}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {11}LightGBM-style histograms and leaf-wise growth}{19}{section.11}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {12}Measured scratch-versus-library results}{20}{section.12}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {12.1}Held-out ranking consistency}{20}{subsection.12.1}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces Scratch minus library ROC AUC under the fixed paired protocol.}}{20}{table.2}\protected@file@percent }
-\newlabel{tab:auc}{{2}{20}{Scratch minus library ROC AUC under the fixed paired protocol}{table.2}{}}
-\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Points near the diagonal show held-out ranking consistency. The plot does not establish calibration equivalence.}}{20}{figure.3}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Class-stratified paired-bootstrap intervals quantify uncertainty in each scratch-minus-library AUC gap.}}{21}{figure.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {12.2}Probability discrepancies are the main teaching result}{21}{subsection.12.2}\protected@file@percent }
-\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Agreement in ranking or labels need not imply agreement in probability scale.}}{21}{table.3}\protected@file@percent }
-\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Observation-level probability comparisons reveal transformation and terminal-value differences that AUC hides.}}{22}{figure.5}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {12.3}The unregularized separation warning}{22}{subsection.12.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {12.4}Parameter verification}{22}{subsection.12.4}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {13}How to interpret model choice responsibly}{22}{section.13}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {14}Common failure modes and diagnostic questions}{23}{section.14}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {15}Extensions}{23}{section.15}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {10.6}Interpretation and relation to Newton's method}{24}{subsection.10.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {11}LightGBM-style histograms and leaf-wise growth}{24}{section.11}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {12}Measured scratch-versus-library results}{25}{section.12}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {12.1}Held-out ranking consistency}{25}{subsection.12.1}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces Scratch minus library ROC AUC under the fixed paired protocol.}}{25}{table.3}\protected@file@percent }
+\newlabel{tab:auc}{{3}{25}{Scratch minus library ROC AUC under the fixed paired protocol}{table.3}{}}
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Points near the diagonal show held-out ranking consistency. The plot does not establish calibration equivalence.}}{25}{figure.4}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Class-stratified paired-bootstrap intervals quantify uncertainty in each scratch-minus-library AUC gap.}}{26}{figure.5}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {12.2}Probability discrepancies are the main teaching result}{26}{subsection.12.2}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces Agreement in ranking or labels need not imply agreement in probability scale.}}{26}{table.4}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Observation-level probability comparisons reveal transformation and terminal-value differences that AUC hides.}}{27}{figure.6}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {12.3}The unregularized separation warning}{27}{subsection.12.3}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {12.4}Parameter verification}{27}{subsection.12.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {13}How to interpret model choice responsibly}{27}{section.13}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {14}Common failure modes and diagnostic questions}{28}{section.14}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {15}Extensions}{28}{section.15}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {A}Pseudocode}{29}{appendix.A}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {A.1}Accelerated proximal logistic training}{29}{subsection.A.1}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {A.2}Greedy CART classification tree}{29}{subsection.A.2}\protected@file@percent }
+\@writefile{toc}{\contentsline {subsection}{\numberline {A.3}Random forest}{29}{subsection.A.3}\protected@file@percent }
 \bibcite{uci-wdbc}{1}
-\@writefile{toc}{\contentsline {section}{\numberline {A}Pseudocode}{24}{appendix.A}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {A.1}Accelerated proximal logistic training}{24}{subsection.A.1}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {A.2}Random forest}{24}{subsection.A.2}\protected@file@percent }
-\@writefile{toc}{\contentsline {subsection}{\numberline {A.3}Newton boosting}{24}{subsection.A.3}\protected@file@percent }
-\@writefile{toc}{\contentsline {section}{\numberline {B}Reproducibility commands}{24}{appendix.B}\protected@file@percent }
-\bibcite{breiman}{2}
-\bibcite{adaboost}{3}
-\bibcite{friedman}{4}
-\bibcite{xgboost}{5}
-\bibcite{lightgbm}{6}
-\gdef \@abspage@last{25}
+\bibcite{cart}{2}
+\bibcite{breiman}{3}
+\bibcite{adaboost}{4}
+\bibcite{friedman}{5}
+\bibcite{xgboost}{6}
+\bibcite{lightgbm}{7}
+\@writefile{toc}{\contentsline {subsection}{\numberline {A.4}Newton boosting}{30}{subsection.A.4}\protected@file@percent }
+\@writefile{toc}{\contentsline {section}{\numberline {B}Reproducibility commands}{30}{appendix.B}\protected@file@percent }
+\gdef \@abspage@last{30}

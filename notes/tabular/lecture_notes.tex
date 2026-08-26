@@ -1,6 +1,7 @@
 \documentclass[11pt]{article}
 \usepackage[margin=0.82in]{geometry}
-\usepackage{amsmath,amssymb,booktabs,enumitem,fancyhdr,float,graphicx,microtype,multicol,tabularx,xcolor}
+\usepackage{amsmath,amssymb,booktabs,enumitem,fancyhdr,float,graphicx,microtype,multicol,tabularx,tikz,xcolor}
+\usetikzlibrary{positioning}
 \usepackage[colorlinks=true,urlcolor=blue!50!black,linkcolor=blue!50!black,citecolor=blue!50!black]{hyperref}
 \graphicspath{{../../output/tabular/figures/}}
 \definecolor{navy}{HTML}{1F4E78}
@@ -116,9 +117,9 @@ The original labels are malignant and benign. The module explicitly encodes
 
 This direction matters: sensitivity is then the fraction of malignant cases
 correctly flagged, and the predicted probability is interpreted as the
-probability of malignancy. The data are licensed CC BY 4.0 by UCI and loaded
-from scikit-learn's local copy, so a benchmark run does not depend on a live
-download.
+probability of malignancy. The data are licensed CC BY 4.0 by UCI. The official
+source files are preserved under \path{data/tabular/wdbc/}, so a benchmark run
+does not depend on a live download.
 
 \subsection{A fixed, leakage-resistant protocol}
 
@@ -363,77 +364,406 @@ norm, and L1 support answer different questions and are all inspected before the
 test set is used.}
 \end{figure}
 
-\section{CART: the reusable tree primitive}
+\section{Decision trees and CART: the reusable tree primitive}
 
-\subsection{Weighted Gini splitting}
+\subsection{What a decision tree represents}
 
-At a node with nonnegative observation weights $w_i$, define the weighted class
-proportion
+A decision tree predicts by asking a sequence of simple questions. For a
+numeric feature, an internal node asks whether $x_j\leq t$. The answer sends the
+observation to the left or right child. A \emph{root} is the first node, an
+\emph{internal node} contains a split, a \emph{branch} is one answer to a split,
+and a \emph{leaf} or \emph{terminal node} stores the final prediction. The depth
+of a node is the number of splits between it and the root.
 
-\[
- \hat\pi_k=\frac{\sum_{i\in\mathcal N}w_i\ind(y_i=k)}
- {\sum_{i\in\mathcal N}w_i}.
-\]
-
-Gini impurity is
-
-\[
- I(\mathcal N)=1-\sum_k\hat\pi_k^2.
-\]
-
-For split $(j,t)$ with left node $x_{ij}\le t$ and right node $x_{ij}>t$, the
-scratch tree minimizes
+The resulting model is a recursive, axis-aligned partition of feature space.
+If the leaves define regions $R_1,\ldots,R_L$, a binary classification tree has
+the piecewise-constant form
 
 \[
- Q(j,t)=\frac{W_L}{W}I(\mathcal N_L)+\frac{W_R}{W}I(\mathcal N_R),
+ \hat p(x)=\sum_{\ell=1}^{L}\hat p_{\ell}\ind(x\in R_{\ell}),
+ \qquad
+ \hat y(x)=\ind\{\hat p(x)\geq 1/2\}.
 \]
 
-subject to leaf-size and depth constraints. Candidate thresholds are midpoints
-between sorted distinct observed values. A leaf predicts its weighted positive
-fraction, which gives forests an immediate probability interface.
+\begin{figure}[H]
+\centering
+\begin{tikzpicture}[
+  levelbox/.style={draw=navy, rounded corners, align=center, inner sep=5pt,
+    fill=lightblue, minimum width=28mm},
+  leafbox/.style={draw=darkgreen, rounded corners, align=center, inner sep=5pt,
+    fill=lightgray, minimum width=25mm},
+  edge from parent/.style={draw=navy,-latex},
+  node distance=10mm and 18mm
+]
+\node[levelbox] (root) {root/internal node\\$x_j\leq t$?};
+\node[levelbox, below left=of root] (child) {internal node\\$x_k\leq s$?};
+\node[leafbox, below right=of root] (leaf3) {leaf $R_3$\\$\hat p_3=0.82$};
+\node[leafbox, below left=of child] (leaf1) {leaf $R_1$\\$\hat p_1=0.08$};
+\node[leafbox, below right=of child] (leaf2) {leaf $R_2$\\$\hat p_2=0.65$};
+\draw[->,navy] (root) -- node[above left]{yes} (child);
+\draw[->,navy] (root) -- node[above right]{no} (leaf3);
+\draw[->,navy] (child) -- node[above left]{yes} (leaf1);
+\draw[->,navy] (child) -- node[above right]{no} (leaf2);
+\end{tikzpicture}
+\caption{Tree anatomy and one prediction path. The symbols and leaf
+probabilities are illustrative rather than estimates from the benchmark fit.}
+\label{fig:tree-anatomy}
+\end{figure}
 
-\subsection{Why scaling is unnecessary for an ordinary tree}
+Thus a tree can represent interactions without adding interaction columns by
+hand. A split on feature $j$ may matter only inside a branch created by an
+earlier split on feature $k$. The price is discontinuity: two nearly identical
+observations can receive different predictions when they fall on opposite sides
+of a threshold.
 
-A monotone transformation preserves feature order. CART asks which observations
-fall to the left or right of a threshold, so multiplying one feature by 1,000
-changes the numeric threshold but not the possible partitions. Scaling can still
-matter outside the core split rule: numeric precision, downstream distances,
-feature engineering, or a mixed pipeline may impose their own requirements.
+\aside{\textbf{Reading a prediction path.} Start at the root, evaluate one
+question, follow the corresponding branch, and repeat until reaching a leaf.
+The conjunction of those branch conditions is a human-readable rule for that
+prediction. This local path is easier to explain than the full tree, whose
+number of leaves can grow exponentially with depth.}
 
-\subsection{Regression and Newton trees}
+\subsection{What CART means}
 
-First-order gradient boosting reuses a regression tree whose leaf value is the
-mean target residual. Second-order boosting uses sums of per-observation
-gradients and Hessians. These are separate concise classes because their leaf
-objectives are mathematically different, not because an abstract inheritance
-hierarchy would look more professional.
-
-\section{Random forests: independent diversity}
-
-A random forest constructs trees independently. For tree $m$:
+CART stands for \emph{Classification and Regression Trees} \cite{cart}. It uses
+binary recursive partitioning:
 
 \begin{enumerate}
-\item draw $n$ training rows with replacement;
-\item at each node, draw a feature subset, commonly $\sqrt p$ features;
-\item fit a CART split using only those candidate features;
-\item grow until the depth, leaf-size, or purity rule stops the tree.
+\item at the current node, search the allowed feature-threshold pairs;
+\item choose the split that produces the largest immediate decrease in an
+impurity or loss criterion;
+\item repeat the same procedure independently in each child;
+\item stop or prune to control complexity.
 \end{enumerate}
 
-The forest probability is the average
+This algorithm is \emph{greedy}. It chooses the best next split, not the best
+complete tree over all possible future split sequences. A locally attractive
+root split can prevent a globally better tree from being reached. Exhaustive
+search over all trees is combinatorial, which is why the greedy approximation is
+central to practical tree learning.
+
+\subsection{Node impurity for classification}
+
+At a node $\mathcal N$ with nonnegative observation weights $w_i$, define total
+weight and weighted class proportions by
 
 \[
- \hat p(x)=\frac1M\sum_{m=1}^M\hat p_m(x).
+ W=\sum_{i\in\mathcal N}w_i,
+ \qquad
+ \hat\pi_k=\frac{1}{W}\sum_{i\in\mathcal N}w_i\ind(y_i=k).
 \]
 
-Bootstrap rows reduce similarity through changed samples; feature subsampling
-reduces similarity among strong predictors. Averaging mainly reduces variance.
-It does not make each tree unbiased, and feature importance can still be
-misleading under correlated predictors.
+An impurity is small when one class dominates and large when classes are mixed.
+Three common choices are
+
+\begin{align*}
+ I_{\mathrm{error}}(\mathcal N)&=1-\max_k\hat\pi_k,\\
+ I_{\mathrm{entropy}}(\mathcal N)&=-\sum_k\hat\pi_k\log\hat\pi_k,\\
+ I_{\mathrm{Gini}}(\mathcal N)&=1-\sum_k\hat\pi_k^2.
+\end{align*}
+
+The convention $0\log 0=0$ makes entropy well defined at a pure node. For
+binary classification with positive fraction $p$, Gini impurity simplifies to
+
+\[
+ I_{\mathrm{Gini}}=1-p^2-(1-p)^2=2p(1-p).
+\]
+
+It is zero at $p=0$ or $1$ and maximized at $p=1/2$. Misclassification error is
+useful for describing leaf error, but it is relatively insensitive to changes
+in class composition. Gini and entropy therefore usually provide a more
+informative split-search signal. The scratch classifier uses weighted Gini so
+the same tree primitive can later serve as an AdaBoost weak learner.
+
+\subsection{The CART split objective}
+
+For candidate split $(j,t)$, define
+
+\[
+ \mathcal N_L(j,t)=\{i\in\mathcal N:x_{ij}\leq t\},
+ \qquad
+ \mathcal N_R(j,t)=\{i\in\mathcal N:x_{ij}>t\}.
+\]
+
+Let $W_L$ and $W_R$ be their total weights. CART chooses the split with minimum
+weighted child impurity
+
+\[
+ Q(j,t)=\frac{W_L}{W}I(\mathcal N_L)
+       +\frac{W_R}{W}I(\mathcal N_R),
+\]
+
+or, equivalently, maximum impurity decrease
+
+\[
+ \Delta I(j,t)=I(\mathcal N)-Q(j,t).
+\]
+
+Weighting by child size prevents a tiny pure child from looking artificially
+competitive while leaving almost all observations in a mixed sibling. Subject
+to the minimum-leaf constraint, the implementation sorts the values of each
+candidate feature and considers thresholds midway between adjacent distinct
+values. No training partition changes between two such adjacent values, so
+searching other thresholds in that interval would be redundant.
+
+After sorting, cumulative class weights provide the left and right impurities
+without rescanning every row for every threshold. Sorting one feature at a node
+costs $O(n_{\mathcal N}\log n_{\mathcal N})$; the subsequent threshold scan is
+linear in the number of rows at that node. Production libraries reuse ordering,
+parallelize features, or use histograms to reduce this cost.
+
+\subsection{A six-observation split calculation}
+
+Consider one feature and equally weighted binary labels:
+
+\begin{center}
+\begin{tabular}{c@{\qquad}rrrrrr}
+\toprule
+$x$ & 1 & 2 & 3 & 4 & 5 & 6 \\
+$y$ & 0 & 0 & 0 & 1 & 1 & 1 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+The root has $p=3/6=1/2$ and Gini impurity $2(1/2)(1/2)=0.5$. At threshold
+$t=3.5$, both children are pure, so
+
+\[
+ Q(1,3.5)=\frac36(0)+\frac36(0)=0,
+ \qquad
+ \Delta I(1,3.5)=0.5.
+\]
+
+At $t=2.5$, the left child is pure, while the right child has positive fraction
+$3/4$ and Gini impurity $2(3/4)(1/4)=0.375$. Therefore
+
+\[
+ Q(1,2.5)=\frac26(0)+\frac46(0.375)=0.25,
+ \qquad
+ \Delta I(1,2.5)=0.25.
+\]
+
+CART chooses $3.5$ because its immediate impurity decrease is larger. In real
+data, ties can occur; deterministic feature order, floating-point tolerances,
+and random feature subsampling can then lead implementations to choose different
+but equally scored splits.
+
+\subsection{Leaf predictions and probability caution}
+
+The scratch classifier stores the weighted positive fraction in leaf $\ell$,
+
+\[
+ \hat p_{\ell}=\frac{\sum_{i\in R_{\ell}}w_i y_i}
+ {\sum_{i\in R_{\ell}}w_i}.
+\]
+
+This supplies both a class prediction and a probability interface. It does not
+guarantee calibrated probabilities. A leaf with two positive training examples
+returns probability one even though the estimate is extremely uncertain.
+Larger leaves, probability smoothing, calibration on separate data, or an
+ensemble can reduce this instability. Class weights change the quantity stored
+in a weighted leaf, so a weighted training proportion need not equal an
+unweighted population probability.
+
+\subsection{Stopping, pre-pruning, and cost-complexity pruning}
+
+If unconstrained, a classification tree can often grow until many leaves are
+pure. This lowers training impurity but raises variance. Common \emph{pre-pruning}
+controls stop growth before that point:
+
+\begin{itemize}
+\item \code{max\_depth}: cap the longest root-to-leaf path;
+\item \code{min\_samples\_split}: require enough rows to attempt a split;
+\item \code{min\_samples\_leaf}: require support on both sides of a split;
+\item \code{min\_impurity\_decrease}: require a meaningful local gain.
+\end{itemize}
+
+Classical CART also supports \emph{post-pruning}. First grow a large tree
+$T_0$, then select a subtree by minimizing the cost-complexity criterion
+
+\[
+ R_{\alpha}(T)=
+ \sum_{\ell\in\mathcal L(T)}\frac{W_{\ell}}{W}I(\mathcal N_{\ell})
+ +\alpha\lvert\mathcal L(T)\rvert,
+\]
+
+where $\mathcal L(T)$ is the leaf set. Increasing $\alpha$ trades training fit
+for fewer leaves. Weakest-link pruning generates a nested sequence of candidate
+subtrees; cross-validation can choose $\alpha$ using only training data. The
+course implementation deliberately uses pre-pruning rather than implementing
+the full pruning path. Scikit-learn exposes the analogous parameter as
+\code{ccp\_alpha}.
+
+\subsection{Regression CART and the connection to boosting}
+
+For a regression leaf, squared-error loss is minimized by the mean response.
+For split $(j,t)$, regression CART minimizes
+
+\[
+ Q_{\mathrm{SSE}}(j,t)=
+ \sum_{i\in\mathcal N_L}(y_i-\bar y_L)^2
+ +\sum_{i\in\mathcal N_R}(y_i-\bar y_R)^2.
+\]
+
+The reduction in sum of squared errors plays the same role as Gini decrease.
+First-order gradient boosting reuses this tree with pseudo-residuals in place of
+the original response. Second-order boosting instead uses sums of gradients and
+Hessians to define split gain and leaf values. Separate concise classes make
+these distinct leaf objectives visible.
+
+\subsection{What trees gain and what they sacrifice}
+
+Trees naturally model thresholds, nonlinearities, and conditional interactions;
+they require neither feature scaling nor a linear decision boundary. A single
+tree is also easy to trace locally. However, greedy fitting is unstable: a small
+change in the training rows can change the root split and therefore the entire
+subtree below it. Deep trees have low bias but high variance, while shallow or
+heavily pruned trees have higher bias but greater stability.
+
+A monotone transformation preserves feature order. CART therefore produces the
+same candidate partitions after multiplying a feature by 1,000, although the
+reported threshold changes. Scaling can still matter through numeric precision,
+feature engineering, or other steps in a mixed pipeline. Missing values and
+categorical predictors require an explicit policy; the classroom data are
+finite and numeric, so the scratch tree intentionally omits imputation,
+surrogate splits, and native categorical subset search.
+
+\section{Random forests: bagging plus randomized features}
+
+\subsection{Why one tree is not enough}
+
+The instability of an individual tree suggests averaging many versions trained
+on perturbed data. Bootstrap aggregation, or \emph{bagging}, draws a bootstrap
+sample of $n$ rows with replacement, fits one tree, repeats independently, and
+averages predictions. For a given bootstrap sample, the expected fraction of
+distinct training rows is
+
+\[
+ 1-\left(1-\frac1n\right)^n\longrightarrow 1-e^{-1}\approx 0.632.
+\]
+
+Thus about $36.8\%$ of rows are out of bag for a particular tree. Different
+bootstrap samples perturb the fitted tree and make averaging useful. However,
+ordinary bagged trees can remain highly correlated when the same strong feature
+dominates most root splits.
+
+A random forest adds a second source of diversity: at \emph{every node}, it
+draws a fresh subset of candidate features and searches for the best split only
+within that subset. This may weaken an individual tree, but it prevents a few
+strong predictors from making all trees look alike.
+
+\subsection{The random-forest algorithm}
+
+For tree $m=1,\ldots,M$:
+
+\begin{enumerate}
+\item draw $n$ training indices with replacement;
+\item start a CART tree on that bootstrap sample;
+\item at each node, draw $m_{\mathrm{try}}$ of the $p$ features without
+replacement;
+\item find the best CART split among only those candidate features;
+\item grow until the depth, leaf-size, purity, or gain rule stops the tree.
+\end{enumerate}
+
+For the binary classroom implementation, tree $m$ returns its leaf positive
+fraction $\hat p_m(x)$ and the forest averages
+
+\[
+ \hat p_{\mathrm{RF}}(x)=\frac1M\sum_{m=1}^{M}\hat p_m(x),
+ \qquad
+ \hat y_{\mathrm{RF}}(x)=\ind\{\hat p_{\mathrm{RF}}(x)\geq 1/2\}.
+\]
+
+Probability averaging is not always identical to majority voting over hard tree
+labels. The course implementation and its scikit-learn reference both use the
+average class-probability interface for the reported probability metrics.
+
+\subsection{How averaging reduces variance}
+
+Suppose the prediction errors of the trees have common variance $\sigma^2$ and
+pairwise correlation $\rho$. The variance of their average is approximately
+
+\[
+ \operatorname{Var}\!\left(\frac1M\sum_{m=1}^{M}T_m(x)\right)
+ =\rho\sigma^2+\frac{1-\rho}{M}\sigma^2.
+\]
+
+Increasing $M$ shrinks the second term, but the correlated component remains.
+Bootstrap sampling creates different training sets; feature subsampling aims to
+reduce $\rho$. This equation explains two practical facts: adding trees cannot
+repair a strongly biased tree design, and decorrelating trees can matter more
+than merely adding highly similar trees.
+
+\subsection{Out-of-bag evaluation}
+
+For training row $i$, let $\mathcal O_i$ contain the trees whose bootstrap
+sample omitted that row. Its out-of-bag prediction is
+
+\[
+ \hat p_i^{\mathrm{OOB}}=
+ \frac{1}{\lvert\mathcal O_i\rvert}
+ \sum_{m\in\mathcal O_i}\hat p_m(x_i).
+\]
+
+Comparing these predictions with $y_i$ gives an internal generalization
+estimate without fitting a separate validation forest. OOB predictions are
+available only from trees that did not train on the row, and with very few trees
+some rows may have too few OOB votes. Preprocessing performed before the
+bootstrap step can also leak information into an OOB estimate. The course
+benchmark therefore uses one untouched test set for every model pair; OOB error
+is a complementary forest diagnostic, not the source of the reported test
+metrics.
+
+\subsection{Hyperparameters and their effects}
+
+\begin{table}[H]
+\centering
+\small
+\begin{tabularx}{\linewidth}{p{0.23\linewidth}X}
+\toprule
+Control & Main effect and diagnostic question \\
+\midrule
+Number of trees $M$ & More trees stabilize the Monte Carlo average but increase time and memory. Has OOB or validation performance plateaued? \\
+$m_{\mathrm{try}}$ / \code{max\_features} & Smaller subsets reduce tree correlation but can weaken splits. Are the trees diverse without becoming systematically poor? \\
+\code{max\_depth} & Greater depth lowers individual-tree bias and raises variance and cost. Does held-out probability quality deteriorate? \\
+\code{min\_samples\_leaf} & Larger leaves smooth probabilities and regularize local rules. Are tiny leaves producing extreme probabilities? \\
+Bootstrap sample size & Smaller samples increase diversity but give each tree less information. Is the strength-correlation tradeoff favorable? \\
+Class/sample weights & Can emphasize costly or rare cases, but changes the fitted target and probability interpretation. Are evaluation metrics aligned with that choice? \\
+\bottomrule
+\end{tabularx}
+\caption{Random-forest controls should be interpreted through tree strength,
+tree correlation, probability stability, and computational cost.}
+\end{table}
+
+For classification, $m_{\mathrm{try}}\approx\sqrt p$ is a common starting
+point, not a theorem. In the benchmark, both versions use 100 trees,
+\code{max\_depth=5}, \code{min\_samples\_leaf=2}, bootstrap samples, and
+\code{max\_features=sqrt}. These restrictions keep the classroom run fast and
+make the scratch-versus-library comparison controlled; they are not claimed to
+be universally optimal.
+
+\subsection{Interpretation and common traps}
+
+A forest is less locally transparent than one tree because its prediction
+aggregates many paths. Mean decrease in impurity importance can favor variables
+with many possible split points and can divide credit unpredictably among
+correlated predictors. Permutation importance evaluates performance loss after
+shuffling a feature on held-out data, but correlated variables can substitute
+for one another and make each appear less important. Neither measure establishes
+causality.
+
+Forests are usually robust tabular baselines, but they do not automatically
+solve probability calibration, class imbalance, missingness, dataset shift, or
+extrapolation beyond the observed feature range. Check ranking, threshold
+metrics, probability loss, subgroup behavior, and stability rather than relying
+on accuracy or feature importance alone.
 
 Matched seeds do not imply identical trees between scratch and scikit-learn.
-Libraries consume random numbers in different orders, break ties differently,
-and may optimize threshold enumeration. The correct verification target is
-controlled predictive behavior and invariants, not byte-for-byte tree identity.
+Libraries consume random numbers in different orders, break equal-gain ties
+differently, and optimize threshold enumeration. Table~\ref{tab:auc} shows that
+the matched forests have a test AUC gap of only $-0.001$, with a paired interval
+containing zero, even though individual trees need not match. The proper
+verification targets are algorithmic invariants and controlled predictive
+behavior, not byte-for-byte tree identity.
 
 \section{AdaBoost: sequential focus on difficult rows}
 
@@ -1210,13 +1540,35 @@ the intercept.
 form the accelerated extrapolation and continue.
 \end{enumerate}
 
+\subsection{Greedy CART classification tree}
+
+\begin{enumerate}
+\item At node $\mathcal N$, compute its weighted positive fraction and Gini
+impurity; store the fraction as the node's fallback prediction.
+\item If the node is pure or violates a depth or sample-size stopping rule,
+return it as a leaf.
+\item Use all features for an ordinary CART tree, or draw the allowed candidate
+feature set when \code{max\_features} requests random feature subsampling.
+\item For each feature, sort its node values and scan midpoints between adjacent
+distinct values using cumulative class weights.
+\item Choose the valid split with largest weighted Gini decrease.
+\item If no split clears \code{min\_impurity\_decrease}, return a leaf.
+\item Otherwise partition the row indices and apply these steps recursively to
+the left and right children.
+\end{enumerate}
+
+At prediction time, follow one branch at each internal node and return the
+positive fraction stored in the reached leaf.
+
 \subsection{Random forest}
 
 \begin{enumerate}
 \item For $m=1,\ldots,M$, sample training row indices with replacement.
-\item Grow a weighted CART tree; at every node sample a feature subset.
+\item Grow a CART tree; at every node sample a fresh feature subset.
 \item Store the weighted positive proportion in each leaf.
 \item Average the $M$ positive-class probabilities at prediction time.
+\item Optionally, for each training row, average only trees for which that row
+was out of bag to obtain an internal diagnostic prediction.
 \end{enumerate}
 
 \subsection{Newton boosting}
@@ -1251,6 +1603,10 @@ installation can use its own documented path.
 W. Wolberg, O. Mangasarian, N. Street, and W. Street.
 \emph{Breast Cancer Wisconsin (Diagnostic)}. UCI Machine Learning Repository,
 DOI: \href{https://doi.org/10.24432/C5DW2B}{10.24432/C5DW2B}.
+
+\bibitem{cart}
+L. Breiman, J. Friedman, R. Olshen, and C. Stone.
+\emph{Classification and Regression Trees}. Wadsworth, 1984.
 
 \bibitem{breiman}
 L. Breiman. Random Forests. \emph{Machine Learning}, 45:5--32, 2001.
