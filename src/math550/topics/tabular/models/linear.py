@@ -106,6 +106,7 @@ class ScratchLogisticRegression(ClassifierMixin, BaseEstimator):
         lipschitz = 0.25 * spectral_norm**2 / len(design) + l2_curvature
         step = self.step_size if self.step_size is not None else 1.0 / max(lipschitz, 1e-12)
 
+        # Standard initialization
         weights = np.zeros(design.shape[1], dtype=float)
         extrapolated = weights.copy()
         momentum = 1.0
@@ -118,9 +119,11 @@ class ScratchLogisticRegression(ClassifierMixin, BaseEstimator):
         self.converged_ = False
 
         for iteration in range(1, self.max_iter + 1):
+            # Forward step evaluated at the extrapolated point
             candidate = extrapolated - step * self._smooth_gradient(
                 design, y_array, extrapolated
             )
+            # Proximal (i.e., backward) step for L1 regularization
             if self.regularization == "l1":
                 penalized = self._penalized_slice(candidate)
                 candidate[penalized] = soft_threshold(
@@ -135,8 +138,10 @@ class ScratchLogisticRegression(ClassifierMixin, BaseEstimator):
             # FISTA can overshoot. Restart from the accepted iterate and, if
             # necessary, backtrack until the penalized objective decreases.
             if candidate_objective > self.loss_curve_[-1] + 1e-12:
+                # This is the case where momentum has produced a candidate increasing the objective function value, then restart at previous weight.
                 extrapolated = weights.copy()
                 momentum = 1.0
+                # Backtracking to halve the step size immediately
                 while candidate_objective > self.loss_curve_[-1] + 1e-12:
                     step *= 0.5
                     candidate = weights - step * self._smooth_gradient(
@@ -166,6 +171,7 @@ class ScratchLogisticRegression(ClassifierMixin, BaseEstimator):
                 break
 
             if self.accelerated:
+                # FISTA momentum recurrence
                 next_momentum = 0.5 * (1.0 + np.sqrt(1.0 + 4.0 * momentum**2))
                 extrapolated = candidate + (
                     (momentum - 1.0) / next_momentum

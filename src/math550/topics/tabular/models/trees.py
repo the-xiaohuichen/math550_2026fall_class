@@ -12,7 +12,7 @@ from ..validation import check_binary_inputs, check_predictors
 
 @dataclass
 class _TreeNode:
-    value: float
+    value: float                        # Weighted class proportions
     feature: int | None = None
     threshold: float | None = None
     left: "_TreeNode | None" = None
@@ -67,6 +67,7 @@ class ScratchDecisionTreeClassifier(ClassifierMixin, BaseEstimator):
         probability = positive_weight / total_weight
         return 2.0 * probability * (1.0 - probability)
 
+    # Output of best split is a tuple: (split feature, threshold, gain)
     def _best_split(
         self, indices: np.ndarray, parent_impurity: float
     ) -> tuple[int, float, float] | None:
@@ -75,6 +76,7 @@ class ScratchDecisionTreeClassifier(ClassifierMixin, BaseEstimator):
         targets = self._y[indices]
         total_weight = float(weights.sum())
         total_positive = float(weights @ targets)
+        # Randomly sample a subset of features to split with a given rng seed and then compare the gain
         feature_ids = self._rng.choice(
             self.n_features_in_, self._n_candidate_features, replace=False
         )
@@ -106,6 +108,7 @@ class ScratchDecisionTreeClassifier(ClassifierMixin, BaseEstimator):
                 ) / total_weight
                 gain = parent_impurity - child_impurity
                 if gain > best_gain + 1e-14:
+                    # Mid-point splitting rule
                     threshold = 0.5 * (
                         sorted_values[position - 1] + sorted_values[position]
                     )
@@ -164,6 +167,8 @@ class ScratchDecisionTreeClassifier(ClassifierMixin, BaseEstimator):
                 raise ValueError("sample_weight must be non-negative with one value per row")
         if self._sample_weight.sum() <= 0:
             raise ValueError("sample_weight must have positive total weight")
+
+        # This determines whether the seed is fixed (single decision tree) or random (random forests for random candidate feature subsets)
         self._rng = np.random.default_rng(self.random_state)
         self._n_candidate_features = _feature_count(self.max_features, self.n_features_in_)
         self.root_ = self._grow(np.arange(len(y_array)), depth=0)

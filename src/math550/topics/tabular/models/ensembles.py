@@ -40,11 +40,13 @@ class ScratchRandomForestClassifier(ClassifierMixin, BaseEstimator):
         self.estimators_ = []
         self.bootstrap_indices_ = []
         for _ in range(self.n_estimators):
+            # Bagging (randomly sampling data with replacement)
             indices = (
                 rng.integers(0, len(y_array), size=len(y_array))
                 if self.bootstrap
                 else np.arange(len(y_array))
             )
+            # Generate another random seed for each tree
             tree = ScratchDecisionTreeClassifier(
                 max_depth=self.max_depth,
                 min_samples_leaf=self.min_samples_leaf,
