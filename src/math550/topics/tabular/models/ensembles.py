@@ -101,11 +101,14 @@ class ScratchAdaBoostClassifier(ClassifierMixin, BaseEstimator):
                 random_state=int(rng.integers(0, np.iinfo(np.int32).max)),
             )
             stump.fit(X_array, y_array, sample_weight=sample_weight)
+            # Convert predicted labels from {0, 1} to {-1, 1}
             signed_prediction = 2.0 * stump.predict(X_array) - 1.0
+            # Compute the adaptive error
             error = float(sample_weight[signed_prediction != signed_y].sum())
             if error >= 0.5 - 1e-14:
                 break
             error = float(np.clip(error, 1e-12, 1.0 - 1e-12))
+            # Weighted mis-classification error
             alpha = self.learning_rate * 0.5 * np.log((1.0 - error) / error)
             sample_weight *= np.exp(-alpha * signed_y * signed_prediction)
             sample_weight /= sample_weight.sum()

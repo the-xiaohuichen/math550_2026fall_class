@@ -93,26 +93,36 @@ class _ExactNewtonTree:
                 & (positions >= self.min_samples_leaf)
                 & ((n_node - positions) >= self.min_samples_leaf)
             )
-            for position in positions[valid]:
-                gradient_left = float(cumulative_gradient[position - 1])
-                hessian_left = float(cumulative_hessian[position - 1])
-                hessian_right = total_hessian - hessian_left
-                if min(hessian_left, hessian_right) < self.min_child_weight:
-                    continue
-                gain = _gain(
-                    gradient_left,
-                    hessian_left,
-                    total_gradient - gradient_left,
-                    hessian_right,
-                    self.reg_lambda,
-                    self.gamma,
+            candidate_positions = positions[valid]
+            if candidate_positions.size == 0:
+                continue
+            left_gradient = cumulative_gradient[candidate_positions - 1]
+            left_hessian = cumulative_hessian[candidate_positions - 1]
+            right_hessian = total_hessian - left_hessian
+            curvature_ok = (
+                np.minimum(left_hessian, right_hessian) >= self.min_child_weight
+            )
+            if not np.any(curvature_ok):
+                continue
+            candidate_positions = candidate_positions[curvature_ok]
+            left_gradient = left_gradient[curvature_ok]
+            left_hessian = left_hessian[curvature_ok]
+            right_hessian = right_hessian[curvature_ok]
+            right_gradient = total_gradient - left_gradient
+            gains = 0.5 * (
+                left_gradient**2 / (left_hessian + self.reg_lambda)
+                + right_gradient**2 / (right_hessian + self.reg_lambda)
+                - total_gradient**2 / (total_hessian + self.reg_lambda)
+            ) - self.gamma
+            local_index = int(np.argmax(gains))
+            gain = float(gains[local_index])
+            if gain > best_gain + 1e-14:
+                position = int(candidate_positions[local_index])
+                threshold = 0.5 * (
+                    sorted_values[position - 1] + sorted_values[position]
                 )
-                if gain > best_gain + 1e-14:
-                    threshold = 0.5 * (
-                        sorted_values[position - 1] + sorted_values[position]
-                    )
-                    best_gain = gain
-                    best = (int(feature), float(threshold), float(gain))
+                best_gain = gain
+                best = (int(feature), float(threshold), gain)
         return best
 
     def _grow(self, indices: np.ndarray, depth: int) -> _BoostNode:

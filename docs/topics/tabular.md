@@ -27,6 +27,11 @@ rows, 30 continuous predictors, and no missing values. The target is recoded to
 `1 = malignant`. Source: [UCI Machine Learning Repository](https://archive.ics.uci.edu/dataset/17/breast-cancer-wisconsin-diagnostic),
 DOI `10.24432/C5DW2B`, CC BY 4.0.
 
+The official UCI source files are preserved under `data/tabular/`: WDBC for the
+classroom benchmark and Wine for the transfer homework. Reproduce and verify
+both downloads with `make download-tabular-data`; exact archive and file
+SHA-256 digests are recorded in `data/tabular/download_manifest.json`.
+
 ## Public source API
 
 Import estimators and the dataset loader from:
@@ -78,11 +83,18 @@ histogram/leaf-wise design. They reuse the benchmark's five verified figures and
 measured scratch/library gaps.
 
 The homework in `homework/tabular/` uses the different public UCI Wine dataset:
-178 observations, 13 chemical measurements, and a binary class-0-versus-rest
-target. Student and instructor PDFs are separate. The instructor validator
-checks all eight model pairs, logistic gradient and objective invariants,
-probability shapes/finiteness, and a fixed stratified 133/45 split. In the
-validated run, every absolute scratch/library AUC gap was at most 0.0056.
+178 observations, 13 chemical measurements, and all three original cultivar
+classes. Student and instructor PDFs are separate. The instructor validator
+checks a scratch multinomial softmax model, a transparent one-vs-rest adapter,
+all eight model pairs, gradient and objective invariants, normalized three-class
+probabilities, and a fixed stratified 133/45 split. In the validated run, every
+absolute scratch/library macro one-vs-rest AUC gap was at most 0.0053.
+
+For a larger optional scale-up exercise, `data/tabular/dry_bean/` preserves the
+2020 UCI Dry Bean dataset: 13,611 rows, 16 numeric image-derived measurements,
+and seven classes. The download manifest pins the official archive and source
+file hashes; no full-model performance claim is attached until a separate
+controlled experiment is run.
 
 The verification target checks that the native `.key` package and the 15-page
 PDF exist and are structurally readable. The deck itself was also reopened in

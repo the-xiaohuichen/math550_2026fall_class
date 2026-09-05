@@ -1,5 +1,47 @@
 {
   "datasets": {
+    "dry_bean": {
+      "archive": {
+        "bytes": 4738776,
+        "name": "dry-bean-dataset.zip",
+        "sha256": "0a64eff5be87f48c3dbbfc0a12a56c5d5b5167ef8e61cd45d69b3e7c7130c06f",
+        "url": "https://archive.ics.uci.edu/static/public/602/dry+bean+dataset.zip"
+      },
+      "citation": "Dry Bean [Dataset]. (2020). UCI Machine Learning Repository. https://doi.org/10.24432/C50S4B.",
+      "dataset": "Dry Bean",
+      "doi": "10.24432/C50S4B",
+      "files": {
+        "Dry_Bean_Dataset.arff": {
+          "archive_path": "DryBeanDataset/Dry_Bean_Dataset.arff",
+          "bytes": 3813205,
+          "sha256": "b2a4a76a2aedfb8ed415adfc1bfc70b5f202cb00cb72e500766e364c14834014"
+        },
+        "Dry_Bean_Dataset.txt": {
+          "archive_path": "DryBeanDataset/Dry_Bean_Dataset.txt",
+          "bytes": 3339,
+          "sha256": "20413356adbeda9da589738cceb9387787970d8cfb41049f3b48c960c05b274d"
+        }
+      },
+      "license": "CC BY 4.0",
+      "local_directory": "data/tabular/dry_bean",
+      "source_page": "https://archive.ics.uci.edu/dataset/602/dry+bean+dataset",
+      "validation": {
+        "class_counts": {
+          "BARBUNYA": 1322,
+          "BOMBAY": 522,
+          "CALI": 1630,
+          "DERMASON": 3546,
+          "HOROZ": 1928,
+          "SEKER": 2027,
+          "SIRA": 2636
+        },
+        "data_file": "Dry_Bean_Dataset.arff",
+        "fields_per_row": 17,
+        "format": "arff",
+        "rows": 13611,
+        "target_column": 16
+      }
+    },
     "wdbc": {
       "archive": {
         "bytes": 51284,
@@ -73,5 +115,5 @@
     }
   },
   "schema_version": 1,
-  "verified_on": "2026-08-24"
+  "verified_on": "2026-09-03"
 }
