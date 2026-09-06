@@ -1,0 +1,46 @@
+{
+  "topic": "generative",
+  "dataset": "scikit-learn digits (UCI Optical Recognition subset)",
+  "dataset_source": "https://archive.ics.uci.edu/dataset/80/optical+recognition+of+handwritten+digits",
+  "dataset_doi": "10.24432/C50P49",
+  "dataset_license": "CC BY 4.0",
+  "n_rows": 1797,
+  "n_train": 1437,
+  "n_test": 360,
+  "image_shape": [
+    8,
+    8
+  ],
+  "latent_components": 8,
+  "pca_explained_variance": 0.6742682037847009,
+  "pca_fit": "training rows only; whitening enabled",
+  "training_pairs": 12000,
+  "validation_pairs": 2000,
+  "epochs": 100,
+  "hidden_sizes": [
+    64,
+    64
+  ],
+  "learning_rate": 0.001,
+  "batch_size": 256,
+  "flow_path": "independent Gaussian-data coupling; sigma_min=0.01",
+  "flow_sampler": "RK4 with 30 steps",
+  "diffusion_schedule": "linear beta 1e-4 to 0.02 over 50 steps",
+  "diffusion_sampler": "deterministic DDIM (eta=0)",
+  "vae_objective": "Gaussian decoder negative ELBO up to an additive constant; six-dimensional diagonal-Gaussian posterior; beta=1",
+  "vae_sampler": "one prior draw and one decoder evaluation",
+  "evaluation_replicates": 8,
+  "generated_per_replicate": 500,
+  "bootstrap_samples": 2000,
+  "random_state": 550,
+  "quick": false,
+  "framework": "PyTorch",
+  "torch_version": "2.13.0",
+  "requested_device": "auto",
+  "device": [
+    "mps"
+  ],
+  "architecture_comparison": "flow and diffusion compare a two-hidden-layer tanh MLP with a single linear layer under matched regression settings; VAE uses a two-hidden-layer encoder/decoder and the same epoch, batch, learning-rate, and device policy",
+  "metric_scope": "All distributional metrics are computed in the declared training-fitted whitened PCA space; frechet_latent is not image-feature FID.",
+  "visual_examples_evidence": "output/generative/analysis/visual_examples.json"
+}

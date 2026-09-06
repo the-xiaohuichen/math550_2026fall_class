@@ -1,0 +1,77 @@
+\relax 
+\providecommand\hyper@newdestlabel[2]{}
+\providecommand\HyperFirstAtBeginDocument{\AtBeginDocument}
+\HyperFirstAtBeginDocument{\ifx\hyper@anchor\@undefined
+\global\let\oldcontentsline\contentsline
+\gdef\contentsline#1#2#3#4{\oldcontentsline{#1}{#2}{#3}}
+\global\let\oldnewlabel\newlabel
+\gdef\newlabel#1#2{\newlabelxx{#1}#2}
+\gdef\newlabelxx#1#2#3#4#5#6{\oldnewlabel{#1}{{#2}{#3}}}
+\AtEndDocument{\ifx\hyper@anchor\@undefined
+\let\contentsline\oldcontentsline
+\let\newlabel\oldnewlabel
+\fi}
+\fi}
+\global\let\hyper@last\relax 
+\gdef\HyperFirstAtBeginDocument#1{#1}
+\providecommand\HyField@AuxAddToFields[1]{}
+\providecommand\HyField@AuxAddToCoFields[2]{}
+\gdef \LT@i {\LT@entry 
+    {1}{45.6626pt}\LT@entry 
+    {1}{135.94278pt}\LT@entry 
+    {1}{220.22298pt}\LT@entry 
+    {1}{94.74345pt}}
+\@writefile{lot}{\contentsline {table}{\numberline {2}{\ignorespaces No family dominates every axis. ``Popular'' is not a sufficient selection criterion.}}{3}{table.2}\protected@file@percent }
+\citation{chen2018neural}
+\citation{lipman2024guide}
+\citation{lipman2023flow}
+\citation{lipman2024guide}
+\citation{lipman2024guide}
+\citation{lipman2023flow}
+\citation{lipman2024guide}
+\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces A common set of particles evolves from an isotropic Gaussian into the two-moons geometry. Gray points are the target reference at every time, so shape formation is directly visible rather than inferred from a scalar metric.}}{8}{figure.1}\protected@file@percent }
+\citation{ho2020ddpm}
+\citation{song2021sde}
+\citation{ho2020ddpm}
+\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Observed points, posterior means, standard-normal prior draws, and one-pass decoded samples. The encoded means form two thin curves, but prior mass also occupies the region between them. The decoder maps that mass into a smooth bridge rather than preserving the target's empty gap.}}{9}{figure.2}\protected@file@percent }
+\citation{ho2020ddpm}
+\citation{salimans2022distill}
+\citation{song2021ddim}
+\citation{song2021ddim}
+\citation{song2021sde}
+\citation{pytorchDocs}
+\citation{dinh2017realnvp}
+\citation{uciDigits}
+\citation{mnistOriginal}
+\@writefile{lot}{\contentsline {table}{\numberline {3}{\ignorespaces PyTorch objective diagnostics. Flow/diffusion values are per-coordinate MSE; VAE values are negative ELBO up to the fixed Gaussian normalizing constant. Compare objectives within a family, not across rows.}}{14}{table.3}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Eighty generated 28-by-28 images. Columns 0--9 are requested class labels; rows begin from independent Gaussian draws. This exposes both controllability and within-label variation, including visible failures.}}{15}{figure.3}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Selected particles along one 20-step midpoint trajectory. Global digit structure and background suppression emerge continuously from noise.}}{16}{figure.4}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Online flow-matching MSE per pixel. The held-out curve uses fixed noise/time pairs over 2,000 official test images and is an objective diagnostic, not a sample- quality metric.}}{16}{figure.5}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Eighty conditional VAE samples. Columns identify requested digits and rows use independent prior draws. The one-pass samples are recognizable but smoother than many flow outputs; ambiguous samples are retained rather than curated away.}}{17}{figure.6}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces One held-out image per class and its posterior-mean reconstruction. This tests the encoder-decoder information path, not the prior-sampling path.}}{18}{figure.7}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {8}{\ignorespaces Training and held-out negative ELBO, with reconstruction BCE and posterior KL shown separately. A nonzero KL shows that this run did not collapse to the standard prior, although it does not prove that every latent coordinate is useful.}}{18}{figure.8}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {9}{\ignorespaces Optimization diagnostics. Flow/diffusion panels report regression MSE; the VAE panel reports reconstruction cost plus KL. Held-out objectives are reported separately and are not sample-quality metrics.}}{19}{figure.9}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {4}{\ignorespaces Means over 8 paired sampling seeds, 500 samples per seed. Metrics are complementary, not a composite leaderboard.}}{19}{table.4}\protected@file@percent }
+\citation{sajjadi2018precision}
+\@writefile{lof}{\contentsline {figure}{\numberline {10}{\ignorespaces A single metric can reward one failure mode and hide another. Bars are means and error bars are standard deviations across sample-generation seeds.}}{20}{figure.10}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {5}{\ignorespaces Paired bootstrap across generation seeds. Intervals quantify Monte Carlo sampling variation conditional on one fitted model; they exclude retraining uncertainty and must not be read as a population confidence interval.}}{20}{table.5}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {11}{\ignorespaces Decoded examples support visual debugging, not quantitative claims. Every row uses the same training-fitted PCA inverse and display scale.}}{21}{figure.11}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {12}{\ignorespaces First two latent coordinates of PyTorch MLP flow-matching trajectories. The full eight-dimensional integration is used for metrics.}}{22}{figure.12}\protected@file@percent }
+\@writefile{lot}{\contentsline {table}{\numberline {6}{\ignorespaces PyTorch samplers on one fixed seed. RK4 uses four vector-field evaluations per step; deterministic diffusion uses one noise prediction per step; the VAE uses one decoder evaluation.}}{22}{table.6}\protected@file@percent }
+\@writefile{lof}{\contentsline {figure}{\numberline {13}{\ignorespaces Step count is both a numerical-analysis parameter and a deployment-cost parameter. A fair comparison reports network evaluations and quality together.}}{23}{figure.13}\protected@file@percent }
+\bibcite{lipman2024guide}{1}
+\bibcite{lipman2023flow}{2}
+\bibcite{chen2018neural}{3}
+\bibcite{dinh2017realnvp}{4}
+\bibcite{ho2020ddpm}{5}
+\bibcite{song2021sde}{6}
+\bibcite{song2021ddim}{7}
+\bibcite{salimans2022distill}{8}
+\bibcite{kingma2014vae}{9}
+\bibcite{goodfellow2014gan}{10}
+\bibcite{oord2016pixel}{11}
+\bibcite{sajjadi2018precision}{12}
+\bibcite{uciDigits}{13}
+\bibcite{mnistOriginal}{14}
+\bibcite{pytorchDocs}{15}
+\gdef \@abspage@last{31}

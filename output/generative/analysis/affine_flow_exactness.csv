@@ -1,0 +1,2 @@
+test_rows,max_log_density_abs_gap,mean_log_density_abs_gap,max_round_trip_abs_gap,max_logdet_cancellation_gap
+360,8.881784197001252e-15,1.6431300764452318e-15,8.881784197001252e-16,0.0
